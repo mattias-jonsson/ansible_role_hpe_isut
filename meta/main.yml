@@ -1,0 +1,19 @@
+---
+
+dependencies:
+  - src: https://github.com/mattias-jonsson/ansible_role_hpe_spp_repo
+    scm: git
+    version: main
+    name: ansible_role_hpe_spp_repo
+
+galaxy_info:
+  author: Mattias Jonsson
+  description: Installs and configures HPE iSUT on supported distributions.
+  min_ansible_version: 2.9.27
+  role_name: ansible_role_hpe_isut
+  license: MIT
+  platforms:
+  - name: EL
+    versions:
+    - "7"
+    - "8"

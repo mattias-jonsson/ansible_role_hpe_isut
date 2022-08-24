@@ -1,0 +1,28 @@
+[<FORCE>]
+FIRMWARE
+[<ACTION>]
+IfNeeded
+[<REBOOTMESSAGE>]
+{{ ansible_role_hpe_isut_options.rebootmessage }}
+[<REBOOTDELAY>]
+{{ ansible_role_hpe_isut_options.rebootdelay }}
+[<STAGINGDIRECTORY>]
+{{ ansible_role_hpe_isut_options.stagingdirectory }}
+[<SAVELOGS>]
+{{ ansible_role_hpe_isut_options.savelogs }}
+[<TPMBYPASSFLAG>]
+true
+[<POLLINGINTERVALINMINUTES>]
+{{ ansible_role_hpe_isut_options.pollingintervalinminutes }}
+[<IGNOREWARNINGS>]
+{{ ansible_role_hpe_isut_options.ignorewarnings }}
+[<OPTIONALCOMPONENTS>]
+None
+[<MODE>]
+{{ ansible_role_hpe_isut_options.mode }}
+[<STAGERETRYCOUNT>]
+2
+[<ENABLEILOQUEUEDUPDATES>]
+{{ ansible_role_hpe_isut_options.enableiloqueuedupdates }}
+[<REBOOTALLOWED>]
+false

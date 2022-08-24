@@ -1,0 +1,13 @@
+---
+
+- name: install block
+  block:
+
+    - name: install HPE iSUT packages
+      become: true
+      yum:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+        lock_timeout: 300
+      loop: "{{ ansible_role_hpe_isut_packages }}"

@@ -1,0 +1,11 @@
+---
+
+- name: Include variables specific for the distribution.
+  include_vars: "{{ item }}"
+  with_items:
+    - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yml"
+
+- block:
+    - import_tasks: install.yml
+    - import_tasks: configure.yml
+  when: '"HPE" in ansible_system_vendor and ansible_product_name is regex("ProLiant [a-zA-Z0-9]+ Gen[0-9]+")'

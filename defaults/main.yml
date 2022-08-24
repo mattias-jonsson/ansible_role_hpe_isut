@@ -1,0 +1,12 @@
+---
+
+ansible_role_hpe_isut_options:
+  mode: 'OnDemand'
+  stagingdirectory: '/var/tmp/sut/stagingdirectory'
+  rebootmessage: 'Rebooting this server'
+  rebootdelay: '60'
+  pollingintervalinminutes: '5'
+  savelogs: 'true'
+  enableiloqueuedupdates: 'true'
+  ilousername: ''
+  ignorewarnings: 'false'

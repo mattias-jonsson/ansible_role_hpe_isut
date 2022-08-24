@@ -1,0 +1,6 @@
+---
+
+ansible_role_hpe_isut_packages:
+  - sut
+
+ansible_role_hpe_isut_bin: /sbin/sut
