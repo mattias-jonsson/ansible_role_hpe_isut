@@ -1,0 +1,29 @@
+---
+
+- name: Create a temporary file to hold running config.
+  become: true
+  ansible.builtin.tempfile:
+    state: file
+    suffix: export
+  changed_when: false
+  register: ansible_role_hpe_isut_exported_config
+
+- name: Export running config.
+  become: true
+  ansible.builtin.command:
+    cmd: "{{ ansible_role_hpe_isut_bin }} -exportconfig {{ ansible_role_hpe_isut_exported_config.path }}"
+  changed_when: false
+
+- name: Check if active config of iSUT is correct.
+  become: true
+  ansible.builtin.template:
+    src: hpe_isut_config.j2
+    dest: "{{ ansible_role_hpe_isut_exported_config.path }}"
+  check_mode: true
+  notify: Reconfigure ISUT
+
+- name: Remove temporary files.
+  become: true
+  ansible.builtin.file:
+    path: "{{ ansible_role_hpe_isut_exported_config.path }}"
+    state: absent

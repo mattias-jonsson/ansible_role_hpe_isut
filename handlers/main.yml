@@ -1,0 +1,4 @@
+---
+
+- name: Reconfigure ISUT
+  include_tasks: tasks/configure.yaml

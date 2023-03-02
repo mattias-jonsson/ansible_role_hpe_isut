@@ -1,64 +1,31 @@
 ---
 
-- name: create a temporary file to hold running config
+- name: Create a temporary file to hold import config.
   become: true
   ansible.builtin.tempfile:
     state: file
-    suffix: export
+    suffix: import
+  register: ansible_role_hpe_isut_import_config
   changed_when: false
-  register: ansible_role_hpe_isut_exported_config
+  when: ansible_role_hpe_isut_config_needs_patching.changed
 
-- name: export running config
-  become: true
-  ansible.builtin.command:
-    cmd: "{{ ansible_role_hpe_isut_bin }} -exportconfig {{ ansible_role_hpe_isut_exported_config.path }}"
-  changed_when: false
-
-- name: check if active config of iSUT is correct
+- name: Create import configuration.
   become: true
   ansible.builtin.template:
     src: hpe_isut_config.j2
-    dest: "{{ ansible_role_hpe_isut_exported_config.path }}"
-  check_mode: yes
-  register: ansible_role_hpe_isut_config_needs_patching
+    dest: "{{ ansible_role_hpe_isut_import_config.path }}"
+    group: root
+    owner: root
+    mode: '0600'
+  when: ansible_role_hpe_isut_config_needs_patching.changed
 
-- name: remove temporary files
+- name: Import iSUT configuration from template.
+  become: true
+  ansible.builtin.command:
+    cmd: "{{ ansible_role_hpe_isut_bin }} -importconfig {{ ansible_role_hpe_isut_import_config.path }}"
+
+- name: Remove temporary files.
   become: true
   ansible.builtin.file:
-    path: "{{ ansible_role_hpe_isut_exported_config.path }}"
+    path: "{{ ansible_role_hpe_isut_import_config.path }}"
     state: absent
-
-- name: import new config block
-  block:
-
-    - name: create a temporary file to hold import config
-      become: true
-      ansible.builtin.tempfile:
-        state: file
-        suffix: import
-      register: ansible_role_hpe_isut_import_config
-      changed_when: false
-      when: ansible_role_hpe_isut_config_needs_patching.changed
-    
-    - name: create import configuration
-      become: true
-      ansible.builtin.template:
-        src: hpe_isut_config.j2
-        dest: "{{ ansible_role_hpe_isut_import_config.path }}"
-        group: root
-        owner: root
-        mode: 0600
-      when: ansible_role_hpe_isut_config_needs_patching.changed
-    
-    - name: import iSUT configuration from template
-      become: true
-      ansible.builtin.command:
-        cmd: "{{ ansible_role_hpe_isut_bin }} -importconfig {{ ansible_role_hpe_isut_import_config.path }}"
-
-    - name: remove temporary files
-      become: true
-      ansible.builtin.file:
-        path: "{{ ansible_role_hpe_isut_import_config.path }}"
-        state: absent
-
-  when: ansible_role_hpe_isut_config_needs_patching.changed

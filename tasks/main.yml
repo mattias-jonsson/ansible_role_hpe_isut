@@ -1,11 +1,16 @@
 ---
 
 - name: Include variables specific for the distribution.
-  include_vars: "{{ item }}"
+  ansible.builtin.include_vars: "{{ item }}"
   with_items:
     - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yml"
 
-- block:
-    - import_tasks: install.yml
-    - import_tasks: configure.yml
+- name: Block for tasks to be run on supported platforms.
   when: '"HPE" in ansible_system_vendor and ansible_product_name is regex("ProLiant [a-zA-Z0-9]+ Gen[0-9]+")'
+  block:
+    - name: Import install tasks.
+      ansible.builtin.import_tasks:
+        file: install.yml
+    - name: Import configuration-check tasks.
+      ansible.builtin.import_tasks:
+        file: check.yml
